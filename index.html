@@ -17,41 +17,102 @@
   --branco: #ffffff;
 }
 
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: var(--bege);
+  padding-top: 70px;
 }
 
 header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
   z-index: 10;
 
   background-color: var(--verde-escuro);
   color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 15px;
+}
+
+/* lado esquerdo */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-left img {
+  height: 50px;
+}
+
+.header-left span {
+  font-size: 18px;
   font-weight: bold;
 }
 
-/* ✅ abas com rolagem */
+/* lado direito */
+.header-right input {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  width: 180px;
+}
+
+/* 📱 mobile */
+@media (max-width: 600px) {
+  .header-left span {
+    font-size: 14px;
+  }
+
+  .header-right input {
+    width: 120px;
+  }
+}
+
 .tabs {
   position: sticky;
-  top: calc(80px + 30px); /* imagem + padding */
+  top: 90px;
   z-index: 9;
 
   display: flex;
   background-color: var(--verde);
   overflow-x: auto;
-  overflow-y: hidden; /* 🚫 impede rolagem vertical nas abas */
+  overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
+
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* 👈 ajuda a esconder o bug visual */
 }
 
 .tabs::-webkit-scrollbar {
-  display: none;
+  height: 8px; /* 👈 barra horizontal */
+}
+
+.tabs::-webkit-scrollbar-track {
+  background: #dcdcdc;
+  border-radius: 10px;
+}
+
+.tabs::-webkit-scrollbar-thumb {
+  background-color: #2f5d62;
+  border-radius: 10px;
+}
+
+.tabs::-webkit-scrollbar-thumb:hover {
+  background-color: #1f3f44;
 }
 
 .tab {
@@ -89,25 +150,61 @@ header {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .controls button {
-  background-color: var(--verde);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   border: none;
-  color: white;
-  padding: 5px 10px;
-  margin: 0 5px;
-  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--verde);
+  color: white;
+
+  transition: 0.2s;
 }
 
+/* botão + */
+.controls button:last-child {
+  background-color: #2ecc71; /* verde mais vivo */
+}
+
+/* botão - */
+.controls button:first-child {
+  background-color: #e74c3c; /* vermelho */
+}
+
+/* hover (desktop) */
 .controls button:hover {
-  background-color: var(--verde-escuro);
+  transform: scale(1.1);
 }
 
+.controls button {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* clique (mobile + desktop) */
+.controls button:active {
+  transform: scale(0.95);
+}
+
+/* quantidade */
 .qty {
-  min-width: 30px;
+  min-width: 35px;
   text-align: center;
   font-weight: bold;
+  font-size: 16px;
 }
 
 /* botão flutuante */
@@ -120,26 +217,56 @@ header {
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
+
+.whatsapp-box button {
+  background-color: #25d366;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.whatsapp-box button:hover {
+  background-color: #1ebe5d;
+}
+
+.whatsapp-box .btn-zerar {
+  background-color: #e74c3c;
+}
+
+.whatsapp-box .btn-zerar:hover {
+  background-color: #c0392b;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-  <img src="logo.png" style="height:80px; vertical-align:middle; margin-right:10px;">
-  Bar do Juca - Estoque
+  <div class="header-left">
+    <img src="logo.png">
+    <span>Bar do Juca - Estoque</span>
+  </div>
+
+  <div class="header-right">
+    <input type="text" placeholder="Buscar item..." onkeyup="buscarItem(this.value)">
+  </div>
 </header>
 
 <div class="tabs">
   <div class="tab active" onclick="openTab('ambev', this)">Ambev</div>
   <div class="tab" onclick="openTab('ceasa', this)">Ceasa</div>
-  <div class="tab" onclick="openTab('embalagens', this)">Embalagens</div>
+  <div class="tab" onclick="openTab('embalagem', this)">Embalagens</div>
   <div class="tab" onclick="openTab('frescato', this)">Frescato</div>
   <div class="tab" onclick="openTab('heineken', this)">Heineken</div>
   <div class="tab" onclick="openTab('juliano', this)">Juliano</div>
   <div class="tab" onclick="openTab('mercado', this)">Mercado</div>
   <div class="tab" onclick="openTab('rodrigo', this)">Rodrigo</div>
   <div class="tab" onclick="openTab('topalto', this)">Top Alto</div>
+
 </div>
 
 <div class="content" id="ambev">
@@ -158,6 +285,7 @@ header {
   <div class="item"><span>Fanta Laranja (lata)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Fanta Uva (lata)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Guaraná Antártica (lata)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>Guaraná Antártica Zero (lata)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Guaraviton (Açaí)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Guaraviton (Ginseng)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>H2O</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
@@ -168,6 +296,7 @@ header {
   <h3>Cervejas</h3>
   <div class="item"><span>Brahma (600ml)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Brahma (lata)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>Brahma Malzebier (lata)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Brahma Zero (lata)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Budweiser (long neck)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Corona (long neck)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
@@ -190,13 +319,30 @@ header {
 </div>
 
 <div class="content" id="ceasa" style="display:none">
+  <h3></h3>
   <div class="item"><span>Camarão (cooler)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Siri (kg)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
 </div>
 
-<div class="content" id="embalagens" style="display:none"></div>
+<div class="content" id="embalagem" style="display:none">
+  <h3>Alumínio</h3>
+  <div class="item"><span>M5(casquinha)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>M8 (bolinhos)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>M160 (iscas)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>M170 (trio)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  
+  <h3>Isopor</h3>
+  <div class="item"><span>Embalagem pirão</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>Embalagem PF</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>Embalagem 2 pessoas</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>Embalagem 3 pessoas</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+
+  <h3>Papelão</h3>
+  <div class="item"><span>Embalagem Chips</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+</div>
 
 <div class="content" id="frescato" style="display:none">
+  <h3></h3>
   <div class="item"><span>Cação (cx)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Frango (kg)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Lambari (cx)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
@@ -209,17 +355,20 @@ header {
 </div>
 
 <div class="content" id="heineken" style="display:none">
+  <h3></h3>
   <div class="item"><span>Heineken (600ml)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Heineken (long neck)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
 </div>
 
 <div class="content" id="juliano" style="display:none">
+  <h3></h3>
   <div class="item"><span>Linguado (cx)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Truta (un)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Corvina (cx)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
 </div>
 
 <div class="content" id="mercado" style="display:none">
+  <h3></h3>
   <div class="item"><span>Alface</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Alho</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Azeite</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
@@ -245,12 +394,14 @@ header {
 </div>
 
 <div class="content" id="rodrigo" style="display:none">
-  <div class="item"><span>Bolinho de Bacalhau</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
-  <div class="item"><span>Bolinho de Camarão</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
-  <div class="item"><span>Bolinho de Tilápia</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <h3></h3>
+  <div class="item"><span>Bolinho de Bacalhau (12un)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>Bolinho de Camarão (9un)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
+  <div class="item"><span>Bolinho de Tilápia (12un)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
 </div>
 
 <div class="content" id="topalto" style="display:none">
+  <h3></h3>
   <div class="item"><span>Farinha Panco</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Catupiry</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
   <div class="item"><span>Óleo de Algodão</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
@@ -260,7 +411,6 @@ header {
   <div class="item"><span>Galiotto (tinto suave)</span><div class="controls"><button onclick="changeQty(this, -1)">-</button><span class="qty">0</span><button onclick="changeQty(this, 1)">+</button></div></div>
 </div>
 
-
 <!-- ✅ seletor de envio -->
 <div class="whatsapp-box">
   <select id="destino">
@@ -268,7 +418,10 @@ header {
     <option value="huila">Huila</option>
   </select>
   <button onclick="enviarWhatsApp()">Enviar</button>
+  <button onclick="zerarTudo()" class="btn-zerar">Zerar</button>
 </div>
+
+
 
 <script>
 /* 🔒 contatos ocultos */
@@ -280,15 +433,27 @@ const contatos = {
 function openTab(tabId, el) {
   document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
   document.getElementById(tabId).style.display = 'block';
   el.classList.add('active');
+
+  el.scrollIntoView({
+  behavior: "smooth",
+  inline: "center",
+  block: "nearest" // 👈 impede movimento vertical
+  });
 }
 
 function changeQty(button, value) {
-  const qtyElement = button.parentElement.querySelector('.qty');
+  const item = button.closest('.item');
+  const nome = item.querySelector('span').innerText;
+
+  const qtyElement = item.querySelector('.qty');
   let qty = parseInt(qtyElement.innerText);
   qty = Math.max(0, qty + value);
   qtyElement.innerText = qty;
+
+  localStorage.setItem(nome, qty);
 }
 
 /* 📲 envio whatsapp */
@@ -330,6 +495,42 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("Service Worker ativo"))
     .catch(err => console.log("Erro SW:", err));
 }
+
+window.onload = () => {
+  document.querySelectorAll('.item').forEach(item => {
+    const nome = item.querySelector('span').innerText;
+    const salvo = localStorage.getItem(nome);
+    if (salvo) {
+      item.querySelector('.qty').innerText = salvo;
+    }
+  });
+};
+
+function zerarTudo() {
+  document.querySelectorAll('.qty').forEach(q => q.innerText = 0);
+  localStorage.clear();
+}
+
+
+function buscarItem(texto) {
+  texto = texto.toLowerCase();
+
+  const abaAtiva = document.querySelector('.content:not([style*="none"])');
+
+  abaAtiva.querySelectorAll('.item').forEach(item => {
+    const nome = item.innerText.toLowerCase();
+    item.style.display = nome.includes(texto) ? "flex" : "none";
+  });
+}
+
+function zerarTudo() {
+  if (!confirm("⚠️ Tem certeza que deseja zerar TODOS os itens?\nEssa ação não pode ser desfeita.")) return;
+
+  document.querySelectorAll('.qty').forEach(q => q.innerText = 0);
+  localStorage.clear();
+  alert("Itens zerados com sucesso.");
+}
+
 </script>
 
 </body>
